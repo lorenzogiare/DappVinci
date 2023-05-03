@@ -11,7 +11,7 @@ contract PatentManager {
 
     uint256 internal patentCount = 0;
 
-    mapping (uint256 => Patent) private patents;
+    mapping(uint256 => Patent) private patents;
     mapping(bytes32 => address) private patentOwners;
 
     // event: new patent added
