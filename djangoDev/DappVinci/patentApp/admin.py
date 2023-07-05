@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 # defines the Patent model's appearence in the admin panel
 class PatentAdmin(admin.ModelAdmin):
-    list_display = ['owner','content','previousContent']
-    ordering = ['_id']
+    list_display = ['owner','id']
+    ordering = ['pk']
 
 
 class EventAdmin(admin.ModelAdmin):

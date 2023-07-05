@@ -1,4 +1,4 @@
-{% extends 'newspaper/base_template.html' %}
+{% extends 'patentApp/base.html' %}
 
 {% block head %}
 <div class="row justify-content-center">
@@ -12,26 +12,28 @@
             </div>
         </div>
     </div>
+
     <div class="col-3 mb-3 mt-2">
-        <a href='/articles/new/'><button class="btn btn-primary">New article</button></a>
+        <a href='/DappVinci/new-patent/'><button class="btn btn-primary">Fill new Patent</button></a>
     </div>
 
     <div class="col-3 mb-4 mt-2">
-        <a href='/author/logout/'><button class="btn btn-secondary">Log out</button></a>
+        <a href='/DappVinci/logout/'><button class="btn btn-secondary">Log out</button></a>
     </div>
 
     {% else %}
 
     <div class="col-3 mb-3 mt-2">
-        <a href='/author/login/'><button class="btn btn-primary">Login as Author</button></a>
+        <a href='/DappVinci/login/'><button class="btn btn-primary">Login</button></a>
     </div>
 
     <div class="col-3 mb-4 mt-2">
-        <a href='/author/registration/'><button class="btn btn-warning">Register as Author</button></a>
+        <a href='/DappVinci/register/'><button class="btn btn-warning">Register</button></a>
     </div>
 
     {% endif %}
 </div>
+
 
 <div class="container-fluid mb-5">
     <form class="search_bar" action="" method="post">
@@ -43,10 +45,10 @@
 
         <div class="row justify-content-center mb-4">
             <div class="col-lg-2 col-sm-4">
-                <h6>order from</h6>{{ form.articles_order }}
+                <h6>order from</h6>{{ form.patent_order }}
             </div>
             <div class="col-lg-2 col-sm-4">
-                <h6>select author</h6>{{ form.author_filter }}
+                <h6>select author</h6>{{ form.owner_filter }}
             </div>
         </div>
         <div class='row justify-content-center'>
@@ -58,19 +60,20 @@
 </div>
 {% endblock %}
 
+
 {% block content %}
 <div class="container-fluid">
-    {% for article in articles %}
+    {% for patent in patents %}
     <div class="row justify-content-center text-center">
         <div class="card mb-4" style="width: 40rem;">
             <div class="card-header">
-                <time class="date text-muted">{{ articles_ages|get_value_from_dict:article.pk }}</time>
+                <time class="date text-muted"></time>
             </div>
             <div class="card-body">
-                <h4 class='card-title'>{{ article.title }}</h4>
-                <p class='card-text'>{{ article.description|linebreaksbr }}</p>
+                <h4 class='card-title'>{{ patent.content.title }}</h4>
+                <p class='card-text'>{{ patent.content.description|linebreaksbr }}</p>
                 <footer class="blockquote-footer mt-1"><cite title="Source Title">{{ article.author }}</cite></footer>
-                <a href="{% url 'article_details' pk=article.pk %}" class="btn btn-primary custom">Read</a>
+                <a href="" class="btn btn-primary custom">Open</a>
                 <style>
                     .custom:visited {
                         background-color: #804999;
@@ -82,3 +85,4 @@
         {% endfor %}
     </div>
     {% endblock %}
+    -->

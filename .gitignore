@@ -1,7 +1,8 @@
-truffleDev/node_modules/
-djangoDev/myVenv/
-djangoDev/.vscode
-djangoDev/DappVinci/DappVinci/__pycache__
-djangoDev/DappVinci/DappVinci/db.sqlite3
-djangoDev/DappVinci/DappVinci/patentApp/__pycache__
-djangoDev/DappVinci/DappVinci/patentApp/migrations/__pycache__
+node_modules/
+myVenv/
+.vscode/
+__pycache__/
+db.sqlite3
+media/
+migrations/
+.env

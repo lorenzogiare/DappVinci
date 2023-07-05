@@ -5,9 +5,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from djongo.models.fields import ObjectIdField, EmbeddedField, ArrayField
-from gridfs import GridFS
-from PIL import Image
-import io
 from django.db.models.signals import post_save
 
 
@@ -18,19 +15,12 @@ class PatentIds(models.Model):
     _id = ObjectIdField()
 
 
-# sub-model for inventors field in DepositInfo
-class Inventors(models.Model):
-    _id = ObjectIdField()
-    inventor = models.CharField(max_length=25)
-    
-
-
 # sub-model for depositInfo field in PatentContent Model
 class DepositInfo(models.Model):
     _id = ObjectIdField()
     currentAssignee = models.CharField(max_length=20)
     applicationDate = models.DateTimeField(default=timezone.now, editable=False)
-    inventors = EmbeddedField(model_container=Inventors)
+    inventors = models.CharField(max_length=40)
 
 
 # sub-model for logs field in Event model
@@ -49,15 +39,14 @@ class PatentContent(models.Model):
     introduction = models.CharField(max_length=100)
     description = models.TextField()
     claims = models.TextField()
-    image = models.ImageField()
+    image = models.FileField(upload_to='images/')   # uploads to MEDIA_ROOT/images/
     depositInfo = EmbeddedField(model_container=DepositInfo)
     _id = ObjectIdField()    
 
 # model of a Patent
 class Patent(models.Model):
-    _id = ObjectIdField()
+    title = models.CharField(max_length=40)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    previousContent = EmbeddedField(model_container=PatentContent)
     content = EmbeddedField(model_container=PatentContent)
 
 
@@ -80,7 +69,7 @@ class Account(models.Model):
     _id = ObjectIdField()
     address = models.CharField(max_length=64)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    patents = EmbeddedField(model_container=PatentIds)
+    patents = ArrayField(model_container=PatentIds)
 
     def __str__(self):
         return self.user.username

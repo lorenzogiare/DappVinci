@@ -6,3 +6,5 @@ sqlparse==0.2.4
 tzdata==2023.3
 pymongo[srv]==3.12.1   #djongo not supperted with superior versions
 pytz==2023.3 
+Pillow==8.2.0
+django-environ==0.10.0
