@@ -1,10 +1,10 @@
-from .models import Patent, DepositInfo, Account
+from .models import Patent, PatentContent, DepositInfo, Account
 from .forms import LoginForm, RegistrationForm, SearchBarForm, NewPatentForm, DepositInfoForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.messages import get_messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -74,8 +74,29 @@ def registration(request):
         form = RegistrationForm(request.POST)
 
         if form.is_valid():
-            username = request.POST['username']
+            
+            try:
+                user = User.objects.get(username=request.POST['username'])                
+                messages.error(request,f'Username {user} already taken')
 
+
+                return render(request, 'patentApp/login.html', {'form': form, 'messages':get_messages(request)})
+                
+            #if username not taken (creates user and logs in)
+            except User.DoesNotExist:
+                user = User.objects.create_user(
+                    username = request.POST['username'],
+                    password = request.POST['password'],
+                    email = request.POST['email'])
+                
+                user.first_name = request.POST['first_name']
+                user.last_name = request.POST['last_name']
+                user.save()
+
+                login(request, user)
+
+                return redirect('/DappVinci/')
+            '''
             # checks if username is already taken
             if User.objects.filter(username=username).exists():
                 messages.error(request,'Username already taken')
@@ -85,17 +106,20 @@ def registration(request):
                 user = User.objects.create_user(
                     username = username,
                     password = request.POST['password'], 
-                    first_name = request.POST['first_name'],
-                    last_name = request.POST['last_name'],
                     email = request.POST['email'])
 
+                user.first_name = request.POST['first_name'],
+                user.last_name = request.POST['last_name'],
                 user.save()
-                account = Account.object.get(id=user.id)
+
+                account = Account.objects.get(id=user.id)
                 account.address = request.POST['address']
                 account.save()
+
                 login(request, user)
 
                 return redirect('/DappVinci/')
+            '''
     else:
 
         form = RegistrationForm()
@@ -114,7 +138,61 @@ def readPatent(request, pk):
 
 # manages the view to edit a patent
 def editPatent(request, pk):
-    pass
+    
+    patent = get_object_or_404(Patent, pk=pk)
+
+    # only accessible if the currently logged-in user is the author
+    if request.user == patent.owner:
+
+        if request.method == "POST":
+
+            form1 = NewPatentForm(request.POST, request.FILES)
+            form2 = DepositInfoForm(request.POST)
+
+            if form1.is_valid() and form2.is_valid():
+
+                # fill-out fields of the patent
+                patent_content = form1.save(commit=False) 
+                deposit_info = form2.save(commit=False)
+
+                patent_content_dict = {
+                    'hash' : '',
+                    'title' : patent_content.title,
+                    'sector' : patent_content.sector,
+                    'introduction' : patent_content.introduction,
+                    'description': patent_content.description, 
+                    'claims' : patent_content.claims,
+                    'image' : patent_content.image, 
+                    'depositInfo' : {
+                        'currentAssignee' : deposit_info.currentAssignee,
+                        'applicationDate' : timezone.now(),
+                        'inventors' : deposit_info.inventors,
+                        '_id': patent.id,
+                    },
+                    '_id' : patent.id,
+                }
+
+                # edit patent object
+                patent.title = patent_content.title
+                patent.content = patent_content_dict
+                
+                # save patent on the database
+                deposit_info.save()
+                patent_content.save()
+                patent.save()
+
+                # do your things on the blockchain
+
+                # add hash to the patent instance
+
+                return redirect('readPatent', pk=patent.pk)
+        else:
+            form1 = NewPatentForm(instance=PatentContent.objects.get(_id=patent.id))
+            form2 = DepositInfoForm(instance=DepositInfo.objects.get(_id=patent.id))
+
+        return render(request, 'patentApp/new&edit.html', {'form1': form1, 'form2': form2 ,'url_now':'/edit'})
+    
+    return render(request, 'patentApp/readPatent.html', {'patent': patent})
 
 # manages the form for a new patent
 @login_required(login_url='/DappVinci/login/')
@@ -130,7 +208,11 @@ def newPatent(request):
             # fill-out fields of the patent
             patent_content = form1.save(commit=False) 
             deposit_info = form2.save(commit=False)
-            count =  Patent.objects.all().count() + 1
+            
+            try:
+                count = Patent.objects.latest('pk').pk
+            except Patent.DoesNotExist:
+                count = 1
 
             patent_content_dict = {
                 'hash' : '',
@@ -149,6 +231,9 @@ def newPatent(request):
             '_id' : count,
             }
 
+            patent_content._id = count
+            deposit_info._id = count
+
             # create new patent object
             new_patent = Patent.objects.create(
                 title = patent_content.title,
@@ -159,6 +244,7 @@ def newPatent(request):
         
 
             # save patent on the database
+            deposit_info.save()
             patent_content.save()
             new_patent.save()
 

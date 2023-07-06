@@ -1,5 +1,7 @@
 {% extends 'patentApp/base.html' %}
 
+{% load extras %}
+
 {% block head %}
 <div class="row justify-content-center">
     <div class="col-2">
@@ -19,6 +21,94 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-flex mt-5 mb-5">
+    <div class="row justify-content-center">
+
+        <div class="card" style="width: 70rem">
+
+            <div class="card-header">
+                <div class="row">
+                    <div class="col m-2">
+                        <h1>{{ patent.title}}</h1>
+                    </div>
+
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <h5>Sector: <span class="badge bg-info">{{ patent.content.sector}}</span></h5>
+                                <h5>Owner: <span class="badge bg-primary">{{ patent.owner}}</span></h5>
+                            </div>
+                            <div class="col text-end mt-auto mb-auto m-3">
+                                <a href="{% url 'edit_patent' pk=patent.pk %}">
+                                    <button class="btn btn-primary mt-3"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="20" height="28" fill="currentColor" class="bi bi-pencil-square"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg></button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" card-body">
+                <div class="row">
+                    <div class="col-6 border-right">
+                        <h3> Introduction </h3>
+                        <p>{{patent.content.introduction}}</p>
+
+                        <hr />
+
+                        <h3> Description </h3>
+                        <p>{{patent.content.description}}</p>
+
+                        <hr />
+
+                        <h3> Claims </h3>
+                        <p> {{patent.content.claims}}</p>
+                    </div>
+                    <div class=" col">
+                        <img src="{{patent.content.image.url}}" class="img-fluid rounded" alt="Responsive image">
+                        <ul class="list-group mt-5">
+                            <li class="list-group-item active" aria-current="true">
+                                <h3>Deposit Info</h3>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Current Assignee</b> :
+                                {{patent.content.depositInfo.currentAssignee}}
+                            </li>
+                            <li class="list-group-item">
+                                <b>application date</b> :
+                                {{patent.content.depositInfo.applicationDate|formatdatetime:"%d %B %Y, %H:%M" }}
+                            </li>
+                            <li class="list-group-item">
+                                <b>inventors</b> : {{patent.content.depositInfo.inventors}}
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--
+
 <div class="container-flex mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="card" style="width: 70rem">
@@ -59,4 +149,5 @@
             </div>
         </div>
     </div>
-    {% endblock %}
+   
+-->

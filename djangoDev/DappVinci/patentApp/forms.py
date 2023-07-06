@@ -29,12 +29,14 @@ class RegistrationForm(forms.Form):
 
 DATE_ORDER = [('most recent', 'MOST RECENT'), ('least recent', "LEAST RECENT")]
 
+
 # creates a list of all owners and adds the "any" option
 OWNERS = [(owner.id, owner) for owner in list(User.objects.all())]
 OWNERS.append(['any', 'any'])
 
 # Search bar form
 class SearchBarForm(forms.Form):
+
     search_filter = forms.CharField(
         max_length=30,
         required=False,
@@ -43,7 +45,7 @@ class SearchBarForm(forms.Form):
             'placeholder':'Search a Patent'
             }
     ))
-    
+        
     patent_order = forms.ChoiceField(
         choices=DATE_ORDER,
         required=False,
@@ -51,7 +53,7 @@ class SearchBarForm(forms.Form):
         widget=forms.Select(attrs={
             'class':'form-select',
             'placeholder':'',
-            }
+        }
     ))
 
     owner_filter = forms.ChoiceField(choices=OWNERS,
@@ -60,8 +62,9 @@ class SearchBarForm(forms.Form):
         widget=forms.Select(attrs={
             'class':'form-select',
             'placeholder':''
-            }
-    ) )
+        }
+    ))
+    
 
 
 # new patent form

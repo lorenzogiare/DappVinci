@@ -73,7 +73,7 @@
                 <h4 class='card-title'>{{ patent.content.title }}</h4>
                 <p class='card-text'>{{ patent.content.description|linebreaksbr }}</p>
                 <footer class="blockquote-footer mt-1"><cite title="Source Title">{{ article.author }}</cite></footer>
-                <a href="" class="btn btn-primary custom">Open</a>
+                <a href="{% url 'readPatent' pk=patent.pk %}" class="btn btn-primary custom">Open</a>
                 <style>
                     .custom:visited {
                         background-color: #804999;

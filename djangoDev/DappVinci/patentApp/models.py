@@ -18,9 +18,9 @@ class PatentIds(models.Model):
 # sub-model for depositInfo field in PatentContent Model
 class DepositInfo(models.Model):
     _id = ObjectIdField()
-    currentAssignee = models.CharField(max_length=20)
+    currentAssignee = models.CharField(max_length=50)
     applicationDate = models.DateTimeField(default=timezone.now, editable=False)
-    inventors = models.CharField(max_length=40)
+    inventors = models.CharField(max_length=50)
 
 
 # sub-model for logs field in Event model
@@ -36,7 +36,7 @@ class PatentContent(models.Model):
     hash = models.CharField(max_length=100)
     title = models.CharField(max_length=40)
     sector = models.CharField(max_length=20)
-    introduction = models.CharField(max_length=100)
+    introduction = models.TextField()
     description = models.TextField()
     claims = models.TextField()
     image = models.FileField(upload_to='images/')   # uploads to MEDIA_ROOT/images/
