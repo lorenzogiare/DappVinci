@@ -189,7 +189,7 @@ def editPatent(request, pk):
         else:
             form1 = NewPatentForm(instance=PatentContent.objects.get(_id=patent.id))
             form2 = DepositInfoForm(instance=DepositInfo.objects.get(_id=patent.id))
-
+            
         return render(request, 'patentApp/new&edit.html', {'form1': form1, 'form2': form2 ,'url_now':'/edit'})
     
     return render(request, 'patentApp/readPatent.html', {'patent': patent})

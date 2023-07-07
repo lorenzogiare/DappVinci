@@ -1,8 +1,8 @@
 {% extends 'patentApp/base.html' %}
 
 
-{% block content %}
-<div class="row ms-5">
+{% block head %}
+<div class="row mb-3">
     <div class="col-2 col-lg-1 col-sm-2 col-md-1 mt-auto mb-auto">
         <a href='/DappVinci/'><button class="btn btn-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-house"
@@ -20,84 +20,87 @@
         {%if url_now == '/new' %}
         <h1>New Patent</h1>
         {% else %}
-        <h2>Patent: {{ patent.content.title }}</h2>
+        <h2>Editing patent ...</h2>
         {% endif %}
     </div>
 </div>
+{% endblock %}
 
-
-
+{% block content %}
 <form method="POST" enctype="multipart/form-data">{% csrf_token %}
 
-    <div class="row ms-5 mb-3 mt-4">
-        <div class="col-4">
-            <div class="form-group">
-                <h4><label for="form.title">Title</label></h4>
-                {{ form1.title}}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-6 ms-4">
+
+                <div class="form-group">
+                    <h4><label for="form.title">Title</label></h4>
+                    {{ form1.title}}
+                </div>
+
+                <div class="form-group">
+                    <h4><label for="form.description">sector</label></h4>
+                    {{ form1.sector}}
+                </div>
+
+                <div class="form-group mt-5 border rounded p-3" style="background-color:cornflowerblue;">
+                    <h4><label for="form.content">Deposit Info</label></h4>
+                    <b>current Assignee: </b>{{ form2.currentAssignee }}
+                    <b>inventors: </b>{{ form2.inventors }}
+                </div>
+
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <h4><label for="form.content">image</label></h4>
+                                <p>{{ form1.image }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-center">
+                                <img style=" width:50%" src="{{form1.image.initial.url}}" class="img-thumbnail"
+                                    alt="Patent Image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row ms-5 mb-3">
-        <div class="col-10 md-5">
-            <div class="form-group">
-                <h4><label for="form.description">sector</label></h4>
-                {{ form1.sector}}
+    <div class="container-fluid mb-5 mt-5">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group text-center">
+                    <h4><label for="form.description">introduction</label></h4>
+                    {{ form1.introduction}}
+                </div>
+
+            </div>
+            <div class="col-4">
+                <div class="form-group text-center">
+                    <h4><label for="form.description">description</label></h4>
+                    {{ form1.description}}
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group text-center">
+                    <h4><label for="form.content">claims</label></h4>
+                    {{ form1.claims }}
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row ms-5 mb-3">
-        <div class="col-10 md-5">
-            <div class="form-group">
-                <h4><label for="form.description">introduction</label></h4>
-                {{ form1.introduction}}
-            </div>
+        <div class="col text-center mt-3 mb-5">
+            <button type="submit" class="btn btn-lg btn-outline-primary" style="width:200px">Send</button>
         </div>
-    </div>
 
-    <div class="row ms-5 mb-3">
-        <div class="col-10 md-5">
-            <div class="form-group">
-                <h4><label for="form.description">description</label></h4>
-                {{ form1.description}}
-            </div>
-        </div>
-    </div>
-
-    <div class="row ms-5 mb-3">
-        <div class="col-11 ">
-            <div class="form-group">
-                <h4><label for="form.content">claims</label></h4>
-                {{ form1.claims }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row ms-5 mb-3">
-        <div class="col-11 ">
-            <div class="form-group">
-                <h4><label for="form.content">image</label></h4>
-                {{ form1.image }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row ms-5 mb-3">
-        <div class="col-11 ">
-            <div class="form-group">
-                <h4><label for="form.content">Deposit Info</label></h4>
-                <b>current Assignee: </b>{{ form2.currentAssignee }}
-                <b>inventors: </b>{{ form2.inventors }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row ms-5  mb-4">
-        <div class="col-8">
-            <button type="submit" class="btn btn-lg btn-outline-primary">Send</button>
-        </div>
     </div>
 </form>
+
 
 {% endblock %}
